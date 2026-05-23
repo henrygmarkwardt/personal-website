@@ -10,8 +10,8 @@ export default function Contact() {
         <a href="https://linkedin.com/in/henry-markwardt" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 transition-colors">
           linkedin.com/in/henry-markwardt
         </a>
-        <a href="https://github.com/henrymarkwardt" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 transition-colors">
-          github.com/henrymarkwardt
+        <a href="https://github.com/henrygmarkwardt" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 transition-colors">
+          github.com/henrygmarkwardt
         </a>
       </div>
     </section>
