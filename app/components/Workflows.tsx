@@ -132,6 +132,8 @@ function StepBox({ children }: { children: React.ReactNode }) {
   );
 }
 
+const mingPhotos = Array.from({ length: 16 }, (_, i) => `/ming-flower/${String(i + 1).padStart(2, "0")}.jpg`);
+
 export default function Workflows() {
   return (
     <section id="automations" className="pt-10 pb-10 border-t border-gray-100">
@@ -154,7 +156,8 @@ export default function Workflows() {
         <div className="flex flex-nowrap items-center gap-3" style={{ minWidth: 0 }}>
 
           <div className="flex-1 min-w-0">
-            <Box label="RIA information parsed from Bulk ADV filing file taken from SEC website">
+            <Box label="Input">
+              <p className="text-[10px] text-gray-400 mb-2">RIA data from SEC bulk ADV filing</p>
               <DataTable headers={secHeaders} rows={secRows} expandCols={[7, 8]} />
             </Box>
           </div>
@@ -175,12 +178,88 @@ export default function Workflows() {
             <HArrow />
           </div>
 
-          <div className="flex-1 min-w-0 flex flex-col gap-3">
-            <Box label="Contacts Data" className="max-h-[260px] overflow-y-auto">
-              <DataTable headers={contactHeaders} rows={contactRows} expandCols={[1, 4, 6]} />
+          <div className="flex-1 min-w-0">
+            <Box label="Output">
+              <div className="flex flex-col gap-3">
+                <div>
+                  <p className="text-[10px] text-gray-400 mb-1.5">Contacts</p>
+                  <div className="max-h-[240px] overflow-y-auto">
+                    <DataTable headers={contactHeaders} rows={contactRows} expandCols={[1, 4, 6]} />
+                  </div>
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-400 mb-1.5">Firms</p>
+                  <div className="max-h-[240px] overflow-y-auto">
+                    <DataTable headers={firmHeaders} rows={firmRows} expandCols={[0, 1, 2]} />
+                  </div>
+                </div>
+              </div>
             </Box>
-            <Box label="Firm Data" className="max-h-[260px] overflow-y-auto">
-              <DataTable headers={firmHeaders} rows={firmRows} expandCols={[0, 1, 2]} />
+          </div>
+
+        </div>
+      </div>
+
+      {/* ── Google Reviews Image Scraper ── */}
+      <div className="px-8 mt-12 mb-8">
+        <h3 className="text-lg font-medium text-gray-900 mb-1">Google Reviews Image Scraper</h3>
+        <p className="text-base text-gray-500 leading-relaxed mb-3">
+          Given any restaurant/store/location name, scrapes every photo from its Google Maps listing.
+          Uses Playwright controlling a headless Chromium browser, discovers all photo filter tabs,
+          scrolls each to exhaustion. No paid APIs or keys required. Takes ~2 minutes per restaurant.
+        </p>
+        <p className="text-sm text-gray-400 italic">
+          The diagram below shows the pipeline — output photos are a real sample from the live run.
+        </p>
+      </div>
+
+      <div className="px-8 overflow-x-auto">
+        <div className="flex flex-nowrap items-center gap-3" style={{ minWidth: 0 }}>
+
+          {/* Input */}
+          <Box label="Input" className="w-[180px] flex-shrink-0">
+            <div className="flex flex-col gap-2">
+              <div className="text-xs text-gray-700 font-medium leading-snug">
+                Ming Flower Chinese Restaurant
+              </div>
+              <div className="text-xs text-gray-400">Lazelle Rd, Columbus OH</div>
+              <div className="mt-1 inline-flex items-center gap-1 text-[10px] text-gray-400 border border-gray-200 rounded px-2 py-1 w-fit">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
+                Google Maps
+              </div>
+            </div>
+          </Box>
+
+          <HArrow />
+
+          {/* Workflow steps */}
+          <Box label="Workflow" className="w-[210px] flex-shrink-0">
+            <div className="flex flex-col gap-2">
+              <StepBox>Playwright launches headless Chromium</StepBox>
+              <StepBox>Search Google Maps, open restaurant Photos panel</StepBox>
+              <StepBox>Detect & iterate all filter tabs</StepBox>
+              <StepBox>Scroll each tab to exhaustion, collect image URLs</StepBox>
+              <StepBox>Deduplicate & download all images</StepBox>
+            </div>
+          </Box>
+
+          <HArrow />
+
+          {/* Output photo grid */}
+          <div className="flex-1 min-w-0">
+            <Box label="Output — 192 images scraped (16 shown)">
+              <div className="grid grid-cols-4 gap-1.5">
+                {mingPhotos.map((src, i) => (
+                  <div key={i} className="aspect-square overflow-hidden rounded-md bg-gray-100">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={src}
+                      alt={`Ming Flower photo ${i + 1}`}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
+                    />
+                  </div>
+                ))}
+              </div>
             </Box>
           </div>
 
