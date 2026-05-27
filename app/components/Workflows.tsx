@@ -134,6 +134,66 @@ function StepBox({ children }: { children: React.ReactNode }) {
 
 const mingPhotos = Array.from({ length: 16 }, (_, i) => `/ming-flower/${String(i + 1).padStart(2, "0")}.jpg`);
 
+const classifierInputPhotos = [
+  "/ming-flower-classifier/0001_reviewer.jpg",
+  "/ming-flower-classifier/0007_reviewer.jpg",
+  "/ming-flower-classifier/0010_reviewer.jpg",
+  "/ming-flower-classifier/0015_reviewer.jpg",
+  "/ming-flower-classifier/0016_reviewer.jpg",
+];
+
+const classifierResults = [
+  {
+    filename: "0001_reviewer.jpg",
+    src: "/ming-flower-classifier/0001_reviewer.jpg",
+    isFood: false,
+    scene: "Exterior of Ming Flower Chinese Restaurant. Red and yellow sign on brick facade, two SUVs in parking lot.",
+    matches: [],
+  },
+  {
+    filename: "0007_reviewer.jpg",
+    src: "/ming-flower-classifier/0007_reviewer.jpg",
+    isFood: true,
+    scene: "Black plastic bowl of fried chicken with bell peppers and cherry tomato, plus a side cup of red sauce, on a granite countertop.",
+    matches: [
+      { item: "General Tso's Chicken", confidence: "high" },
+      { item: "Orange Chicken", confidence: "medium" },
+      { item: "Sweet & Sour", confidence: "medium" },
+    ],
+  },
+  {
+    filename: "0010_reviewer.jpg",
+    src: "/ming-flower-classifier/0010_reviewer.jpg",
+    isFood: true,
+    scene: "Top-down view of white plate with stir-fried green beans and red chili flakes on a yellow tablecloth.",
+    matches: [
+      { item: "Fresh Green Bean", confidence: "high" },
+      { item: "Szechuan Green Bean", confidence: "low" },
+    ],
+  },
+  {
+    filename: "0015_reviewer.jpg",
+    src: "/ming-flower-classifier/0015_reviewer.jpg",
+    isFood: true,
+    scene: "Three dishes on white plates: crispy chicken with green chilies, wide rice noodles with beef and bean sprouts, and plain white rice.",
+    matches: [
+      { item: "Fried Chicken Wings", confidence: "high" },
+      { item: "Beef Hou Fun", confidence: "high" },
+      { item: "no menu match (plain rice)", confidence: "low" },
+    ],
+  },
+  {
+    filename: "0016_reviewer.jpg",
+    src: "/ming-flower-classifier/0016_reviewer.jpg",
+    isFood: true,
+    scene: "Close-up of battered, deep-fried meat pieces in thick glossy reddish-orange sauce on a metal plate.",
+    matches: [
+      { item: "Orange Chicken", confidence: "high" },
+      { item: "General Tso's Chicken", confidence: "low" },
+    ],
+  },
+];
+
 export default function Workflows() {
   return (
     <section id="automations" className="pt-10 pb-10 border-t border-gray-100">
@@ -265,6 +325,95 @@ export default function Workflows() {
 
         </div>
       </div>
+      {/* ── Review Image Classifier ── */}
+      <div className="px-8 mt-12 mb-8">
+        <h3 className="text-lg font-medium text-gray-900 mb-1">Restaurant Review Image Classifier</h3>
+        <p className="text-base text-gray-500 leading-relaxed mb-3">
+          Takes photos from restaurant reviews and identifies what&apos;s in each image, then matches
+          visible dishes to the restaurant&apos;s menu. Built with Python and OpenRouter. Costs &lt;$0.001
+          per image and runs in ~12s per image.
+        </p>
+        <p className="text-sm text-gray-400 italic">
+          The diagram below shows the pipeline — outputs are real results from a live run on Ming Flower review photos.
+        </p>
+      </div>
+
+      <div className="px-8 overflow-x-auto">
+        <div className="flex flex-nowrap items-start gap-3" style={{ minWidth: 0 }}>
+
+          {/* Input */}
+          <Box label="Input — review photos" className="w-[200px] flex-shrink-0">
+            <div className="grid grid-cols-2 gap-1.5">
+              {classifierInputPhotos.map((src, i) => (
+                <div key={i} className="aspect-square overflow-hidden rounded-md bg-gray-100">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={src}
+                    alt={`Review photo ${i + 1}`}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
+                  />
+                </div>
+              ))}
+            </div>
+          </Box>
+
+          <HArrow />
+
+          {/* Workflow */}
+          <Box label="Workflow" className="w-[210px] flex-shrink-0">
+            <div className="flex flex-col gap-2">
+              <StepBox>Sends each photo to perceptron-mk1 via OpenRouter with the full menu attached</StepBox>
+              <StepBox>Model describes the scene and matches every visible dish to a menu item in one pass</StepBox>
+              <StepBox>Cross-checks matches against the real menu and auto-corrects close misses</StepBox>
+              <StepBox>Flags non-food photos and dishes not found on the menu</StepBox>
+            </div>
+          </Box>
+
+          <HArrow />
+
+          {/* Output */}
+          <div className="flex-1 min-w-0">
+            <Box label="Output — per-image classifications">
+              <div className="flex flex-col gap-3">
+                {classifierResults.map((result, i) => (
+                  <div key={i} className="flex gap-3 items-start">
+                    <div className="w-14 h-14 flex-shrink-0 rounded-md overflow-hidden bg-gray-100">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={result.src}
+                        alt={result.filename}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-[10px] font-medium text-gray-500">{result.filename}</span>
+                        {result.isFood ? (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-green-50 text-green-600 border border-green-100">food</span>
+                        ) : (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-gray-50 text-gray-400 border border-gray-200">non-food</span>
+                        )}
+                      </div>
+                      <p className="text-[10px] text-gray-500 leading-relaxed mb-1.5 line-clamp-2">{result.scene}</p>
+                      {result.matches.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {result.matches.map((m, j) => (
+                            <span key={j} className={`text-[9px] px-1.5 py-0.5 rounded border ${m.confidence === "high" ? "bg-[#faf6f0] border-[#e8dfd0] text-gray-600" : "bg-gray-50 border-gray-200 text-gray-400"}`}>
+                              {m.item}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Box>
+          </div>
+
+        </div>
+      </div>
+
     </section>
   );
 }
