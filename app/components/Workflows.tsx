@@ -1,4 +1,4 @@
-const HArrow = () => (
+export const HArrow = () => (
   <div className="flex items-center flex-shrink-0 self-center px-1">
     <div className="h-px w-6 bg-gray-300" />
     <div
@@ -61,7 +61,7 @@ const contactRows = [
   ["Krista Hommel","Client Service Associate","krista.brown@newworldadvisors.com","other","Handles client inquiries, account administration, and day-to-day service support.","296798","NEW WORLD ADVISORS LLC"],
 ];
 
-function DataTable({
+export function DataTable({
   headers,
   rows,
   expandCols,
@@ -115,7 +115,7 @@ function DataTable({
   );
 }
 
-function Box({ label, children, className = "" }: { label: string; children: React.ReactNode; className?: string }) {
+export function Box({ label, children, className = "" }: { label: string; children: React.ReactNode; className?: string }) {
   return (
     <div className={`border border-gray-200 rounded-xl p-4 bg-white ${className}`}>
       <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-3">{label}</p>
@@ -124,7 +124,7 @@ function Box({ label, children, className = "" }: { label: string; children: Rea
   );
 }
 
-function StepBox({ children }: { children: React.ReactNode }) {
+export function StepBox({ children }: { children: React.ReactNode }) {
   return (
     <div className="border border-[#e8dfd0] rounded-lg px-3 py-2 text-xs text-gray-600 leading-relaxed bg-[#faf6f0]">
       {children}
@@ -257,7 +257,112 @@ function LinkedInCrawlerDemo() {
   );
 }
 
-const mingPhotos = Array.from({ length: 16 }, (_, i) => `/ming-flower/${String(i + 1).padStart(2, "0")}.jpg`);
+const VArrow = () => (
+  <div className="flex flex-col items-center flex-shrink-0 self-center py-1">
+    <div className="w-px h-5 bg-gray-300" />
+    <div
+      className="w-0 h-0"
+      style={{
+        borderLeft: "5px solid transparent",
+        borderRight: "5px solid transparent",
+        borderTop: "7px solid #d1d5db",
+      }}
+    />
+  </div>
+);
+
+function FlowCard({ n, anchor, name, blurb }: { n: string; anchor: string; name: string; blurb: string }) {
+  return (
+    <a
+      href={`/restaurant-to-menu#${anchor}`}
+      className="w-[124px] flex-shrink-0 border border-[#e8dfd0] rounded-lg px-2.5 py-2.5 bg-[#faf6f0] hover:bg-[#f3ead9] hover:border-[#d8c9ac] transition-colors group"
+    >
+      <div className="text-[10px] font-mono text-gray-400 mb-1">{n}</div>
+      <div className="text-xs font-medium text-gray-800 leading-tight mb-1 group-hover:text-gray-900">{name}</div>
+      <div className="text-[10px] text-gray-500 leading-snug">{blurb}</div>
+    </a>
+  );
+}
+
+function RestaurantToMenuStrip() {
+  return (
+    <>
+      <div className="px-8 mt-12 mb-8">
+        <h3 className="text-lg font-medium text-gray-900 mb-1">Restaurant Reviews → Menu Builder</h3>
+        <p className="text-base text-gray-500 leading-relaxed mb-3">
+          A five-stage pipeline that takes a restaurant&apos;s name and menu URL and produces a finished,
+          photo-illustrated menu. It extracts the text menu, scrapes customer photos from Google Maps, classifies
+          the images, retouches each plate with an image model, then matches photos back to menu items. Takes 5–30
+          minutes per restaurant. Costs ~$0.30 + $0.04 per image retouched ($2.30 for a menu with 50 images).
+        </p>
+        <p className="text-sm text-gray-400 italic">
+          Click any stage to see it in detail, or view the{" "}
+          <a href="/restaurant-to-menu" className="underline hover:text-gray-600">full breakdown page</a>. Every stage
+          shows real data from a live run on The Old Mohawk (Columbus, OH).
+        </p>
+      </div>
+
+      <div className="px-8 overflow-x-auto">
+        <div className="flex flex-nowrap items-center gap-3" style={{ minWidth: 0 }}>
+
+          {/* Input */}
+          <Box label="Input" className="w-[200px] flex-shrink-0">
+            <div className="flex flex-col gap-2">
+              <div className="text-sm text-gray-700 font-medium leading-snug">The Old Mohawk</div>
+              <div className="text-xs text-gray-400">819 Mohawk St, Columbus OH</div>
+              <div className="text-xs text-gray-400 break-all">oldmohawktavern.com/our-menu/</div>
+              <div className="mt-1 inline-flex items-center gap-1 text-[10px] text-gray-400 border border-gray-200 rounded px-2 py-1 w-fit">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
+                Google Maps
+              </div>
+            </div>
+          </Box>
+
+          <HArrow />
+
+          {/* Stacked workflow cards: 2 on top, 3 below */}
+          <div className="flex flex-col items-center gap-1 flex-shrink-0">
+            <div className="flex items-center gap-2">
+              <FlowCard n="01" anchor="extractor" name="Menu Extractor" blurb="Scrapes the menu page into structured text" />
+              <HArrow />
+              <FlowCard n="02" anchor="scraper" name="Photo Scraper" blurb="Pulls every photo from Google Maps" />
+            </div>
+            <VArrow />
+            <div className="flex items-center gap-2">
+              <FlowCard n="03" anchor="classifier" name="Classifier" blurb="Vision model finds single-dish food shots" />
+              <HArrow />
+              <FlowCard n="04" anchor="retoucher" name="Retoucher" blurb="Seedream cleans up each plated dish" />
+              <HArrow />
+              <FlowCard n="05" anchor="builder" name="Menu Builder" blurb="Matches photos to items, builds the menu" />
+            </div>
+          </div>
+
+          <HArrow />
+
+          {/* Output — actual produced menu, scaled down */}
+          <div className="flex-1 min-w-[320px]">
+            <Box label="Output — finished menu (live HTML the pipeline produced)">
+              <div className="h-[460px] w-full overflow-hidden rounded border border-gray-100">
+                <iframe
+                  src="/old-mohawk/menu.html"
+                  title="Generated menu — The Old Mohawk"
+                  style={{
+                    width: "200%",
+                    height: "920px",
+                    border: 0,
+                    transform: "scale(0.5)",
+                    transformOrigin: "top left",
+                  }}
+                />
+              </div>
+            </Box>
+          </div>
+
+        </div>
+      </div>
+    </>
+  );
+}
 
 export default function Workflows() {
   return (
@@ -328,71 +433,8 @@ export default function Workflows() {
       {/* ── LinkedIn URL Finder ── */}
       <LinkedInCrawlerDemo />
 
-      {/* ── Google Reviews Image Scraper ── */}
-      <div className="px-8 mt-12 mb-8">
-        <h3 className="text-lg font-medium text-gray-900 mb-1">Google Reviews Image Scraper</h3>
-        <p className="text-base text-gray-500 leading-relaxed mb-3">
-          Given any restaurant/store/location name, scrapes every photo from its Google Maps listing.
-          Uses Playwright controlling a headless Chromium browser, discovers all photo filter tabs,
-          scrolls each to exhaustion. No paid APIs or keys required. Takes ~2 minutes per restaurant.
-        </p>
-        <p className="text-sm text-gray-400 italic">
-          The diagram below shows the pipeline — output photos are a real sample from the live run.
-        </p>
-      </div>
-
-      <div className="px-8 overflow-x-auto">
-        <div className="flex flex-nowrap items-center gap-3" style={{ minWidth: 0 }}>
-
-          {/* Input */}
-          <Box label="Input" className="w-[180px] flex-shrink-0">
-            <div className="flex flex-col gap-2">
-              <div className="text-xs text-gray-700 font-medium leading-snug">
-                Ming Flower Chinese Restaurant
-              </div>
-              <div className="text-xs text-gray-400">Lazelle Rd, Columbus OH</div>
-              <div className="mt-1 inline-flex items-center gap-1 text-[10px] text-gray-400 border border-gray-200 rounded px-2 py-1 w-fit">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
-                Google Maps
-              </div>
-            </div>
-          </Box>
-
-          <HArrow />
-
-          {/* Workflow steps */}
-          <Box label="Workflow" className="w-[210px] flex-shrink-0">
-            <div className="flex flex-col gap-2">
-              <StepBox>Playwright launches headless Chromium</StepBox>
-              <StepBox>Search Google Maps, open restaurant Photos panel</StepBox>
-              <StepBox>Detect & iterate all filter tabs</StepBox>
-              <StepBox>Scroll each tab to exhaustion, collect image URLs</StepBox>
-              <StepBox>Deduplicate & download all images</StepBox>
-            </div>
-          </Box>
-
-          <HArrow />
-
-          {/* Output photo grid */}
-          <div className="flex-1 min-w-0">
-            <Box label="Output — 192 images scraped (16 shown)">
-              <div className="grid grid-cols-4 gap-1.5">
-                {mingPhotos.map((src, i) => (
-                  <div key={i} className="aspect-square overflow-hidden rounded-md bg-gray-100">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={src}
-                      alt={`Ming Flower photo ${i + 1}`}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
-                    />
-                  </div>
-                ))}
-              </div>
-            </Box>
-          </div>
-
-        </div>
-      </div>
+      {/* ── Restaurant Reviews → Menu ── */}
+      <RestaurantToMenuStrip />
     </section>
   );
 }
