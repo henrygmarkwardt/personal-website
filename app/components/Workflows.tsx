@@ -132,6 +132,131 @@ function StepBox({ children }: { children: React.ReactNode }) {
   );
 }
 
+const linkedinInputHeaders = ["contact_name", "contact_title", "firm_name"];
+const linkedinInputRows = [
+  ["Jeff Wheeler",     "President",                       "THE WEALTH COLLABORATIVE, INC."],
+  ["Jeff Robinson",    "Wealth Advisor",                  "THE WEALTH COLLABORATIVE, INC."],
+  ["Scott Frazin",     "Founder & Managing Director",     "CHICAGO CAPITAL, LLC"],
+  ["David Mabie",      "Partner",                         "CHICAGO CAPITAL, LLC"],
+  ["Rick Fradin, CFA", "Partner",                         "CHICAGO CAPITAL, LLC"],
+  ["Jim Mabie",        "Partner",                         "CHICAGO CAPITAL, LLC"],
+  ["Eric Maddix",      "Associate",                       "CHICAGO CAPITAL, LLC"],
+  ["Sophie Way, CFA",  "Portfolio Manager",               "GLENEAGLES INVESTMENT ADVISORS, LLC"],
+];
+
+const linkedinOutputHeaders = ["contact_name", "firm_name", "linkedin_url"];
+const linkedinOutputRows = [
+  ["Jeff Wheeler",     "THE WEALTH COLLABORATIVE, INC.",        "linkedin.com/in/jeff-wheeler-307298a"],
+  ["Jeff Robinson",    "THE WEALTH COLLABORATIVE, INC.",        "linkedin.com/in/jeffrobinsonjdmscfp"],
+  ["Scott Frazin",     "CHICAGO CAPITAL, LLC",                  "linkedin.com/in/scott-frazin-cfa-80041212"],
+  ["David Mabie",      "CHICAGO CAPITAL, LLC",                  "linkedin.com/in/david-mabie-685895166"],
+  ["Rick Fradin, CFA", "CHICAGO CAPITAL, LLC",                  "linkedin.com/in/rick-fradin-cfa-6594ab5"],
+  ["Jim Mabie",        "CHICAGO CAPITAL, LLC",                  "linkedin.com/in/jim-mabie-622218168"],
+  ["Eric Maddix",      "CHICAGO CAPITAL, LLC",                  "linkedin.com/in/eric-maddix-51621a168"],
+  ["Sophie Way, CFA",  "GLENEAGLES INVESTMENT ADVISORS, LLC",   "linkedin.com/in/sophia-way-039641a8"],
+];
+
+function LinkedInOutputTable() {
+  return (
+    <div className="overflow-x-auto rounded-md border border-gray-100">
+      <table className="text-xs border-collapse min-w-full">
+        <thead>
+          <tr className="bg-gray-50 border-b border-gray-200">
+            {linkedinOutputHeaders.map((h) => (
+              <th
+                key={h}
+                className={`text-left font-medium px-3 py-2 whitespace-nowrap ${
+                  h === "linkedin_url" ? "text-blue-500" : "text-gray-500"
+                }`}
+              >
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {linkedinOutputRows.map((row, i) => (
+            <tr key={i} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
+              {row.map((cell, j) =>
+                j === 2 ? (
+                  <td key={j} className="px-3 py-2 text-blue-500 whitespace-nowrap font-mono text-[10px]">
+                    <a
+                      href={`https://${cell}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline"
+                    >
+                      {cell}
+                    </a>
+                  </td>
+                ) : (
+                  <td key={j} className="px-3 py-2 text-gray-600 whitespace-nowrap max-w-[180px] overflow-hidden text-ellipsis" title={cell}>
+                    {cell}
+                  </td>
+                )
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function LinkedInCrawlerDemo() {
+  return (
+    <>
+      <div className="px-8 mt-12 mb-8">
+        <h3 className="text-lg font-medium text-gray-900 mb-1">LinkedIn URL Finder</h3>
+        <p className="text-base text-gray-500 leading-relaxed mb-3">
+          Given a list of advisor contacts, automatically finds and records each person&apos;s LinkedIn
+          profile URL. Searches the web for each contact, checks that the result actually belongs to
+          the right person, and writes confirmed URLs back to Google Sheets — without ever overwriting
+          existing data. Runs entirely free with no paid APIs. Currently processing 6,300+ contacts.
+        </p>
+        <p className="text-sm text-gray-400 italic">
+          The diagram below shows real contacts and LinkedIn URLs found by a live run.
+        </p>
+      </div>
+
+      <div className="px-8 overflow-x-auto">
+        <div className="flex flex-nowrap items-center gap-3" style={{ minWidth: 0 }}>
+
+          {/* Input */}
+          <div className="flex-1 min-w-0">
+            <Box label="Input — contacts from RIA scraper">
+              <p className="text-[10px] text-gray-400 mb-2">6,357 rows · no LinkedIn URLs yet</p>
+              <DataTable headers={linkedinInputHeaders} rows={linkedinInputRows} />
+            </Box>
+          </div>
+
+          <HArrow />
+
+          {/* Workflow */}
+          <Box label="Workflow" className="w-[200px] flex-shrink-0">
+            <div className="flex flex-col gap-2">
+              <StepBox>Searches the web for each person&apos;s LinkedIn profile by name and company</StepBox>
+              <StepBox>Tries multiple search strategies if the first doesn&apos;t return results</StepBox>
+              <StepBox>Confirms each result matches the right person before saving</StepBox>
+              <StepBox>Writes URLs to Google Sheets — skips anyone already found</StepBox>
+            </div>
+          </Box>
+
+          <HArrow />
+
+          {/* Output */}
+          <div className="flex-1 min-w-0">
+            <Box label="Output — LinkedIn URLs written to sheet">
+              <LinkedInOutputTable />
+            </Box>
+          </div>
+
+        </div>
+      </div>
+    </>
+  );
+}
+
 const mingPhotos = Array.from({ length: 16 }, (_, i) => `/ming-flower/${String(i + 1).padStart(2, "0")}.jpg`);
 
 export default function Workflows() {
@@ -199,6 +324,9 @@ export default function Workflows() {
 
         </div>
       </div>
+
+      {/* ── LinkedIn URL Finder ── */}
+      <LinkedInCrawlerDemo />
 
       {/* ── Google Reviews Image Scraper ── */}
       <div className="px-8 mt-12 mb-8">
