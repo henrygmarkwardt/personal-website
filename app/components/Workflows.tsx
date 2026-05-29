@@ -141,7 +141,7 @@ const linkedinInputRows = [
   ["Rick Fradin, CFA", "Partner",                         "CHICAGO CAPITAL, LLC"],
   ["Jim Mabie",        "Partner",                         "CHICAGO CAPITAL, LLC"],
   ["Eric Maddix",      "Associate",                       "CHICAGO CAPITAL, LLC"],
-  ["Sophie Way, CFA",  "Portfolio Manager",               "GLENEAGLES INVESTMENT ADVISORS, LLC"],
+  ["Sarah Couch",       "Family Accountant",               "GLENEAGLES INVESTMENT ADVISORS, LLC"],
 ];
 
 const linkedinOutputHeaders = ["contact_name", "firm_name", "linkedin_url"];
@@ -153,7 +153,7 @@ const linkedinOutputRows = [
   ["Rick Fradin, CFA", "CHICAGO CAPITAL, LLC",                  "linkedin.com/in/rick-fradin-cfa-6594ab5"],
   ["Jim Mabie",        "CHICAGO CAPITAL, LLC",                  "linkedin.com/in/jim-mabie-622218168"],
   ["Eric Maddix",      "CHICAGO CAPITAL, LLC",                  "linkedin.com/in/eric-maddix-51621a168"],
-  ["Sophie Way, CFA",  "GLENEAGLES INVESTMENT ADVISORS, LLC",   "linkedin.com/in/sophia-way-039641a8"],
+  ["Sarah Couch",       "GLENEAGLES INVESTMENT ADVISORS, LLC",   "linkedin.com/in/sarahcouch1611"],
 ];
 
 function LinkedInOutputTable() {
@@ -211,8 +211,8 @@ function LinkedInCrawlerDemo() {
         <p className="text-base text-gray-500 leading-relaxed mb-3">
           Given a list of advisor contacts, automatically finds and records each person&apos;s LinkedIn
           profile URL. Searches the web for each contact, checks that the result actually belongs to
-          the right person, and writes confirmed URLs back to Google Sheets — without ever overwriting
-          existing data. Runs entirely free with no paid APIs. Currently processing 6,300+ contacts.
+          the right person, and writes confirmed URLs back to Google Sheets. Runs entirely free on a
+          headless browser. Takes ~20 seconds per contact.
         </p>
         <p className="text-sm text-gray-400 italic">
           The diagram below shows real contacts and LinkedIn URLs found by a live run.
@@ -238,7 +238,7 @@ function LinkedInCrawlerDemo() {
               <StepBox>Searches the web for each person&apos;s LinkedIn profile by name and company</StepBox>
               <StepBox>Tries multiple search strategies if the first doesn&apos;t return results</StepBox>
               <StepBox>Confirms each result matches the right person before saving</StepBox>
-              <StepBox>Writes URLs to Google Sheets — skips anyone already found</StepBox>
+              <StepBox>Writes URLs to Google Sheets</StepBox>
             </div>
           </Box>
 
