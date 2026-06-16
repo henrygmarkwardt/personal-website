@@ -212,7 +212,7 @@ function LinkedInCrawlerDemo() {
           Given a list of advisor contacts, automatically finds and records each person&apos;s LinkedIn
           profile URL. Searches the web for each contact, checks that the result actually belongs to
           the right person, and writes confirmed URLs back to Google Sheets. Runs entirely free on a
-          headless browser. Takes ~20 seconds per contact.
+          headless browser. Takes ~20 seconds per contact. The hard part is verification: confirming a search hit is the right person before writing it back, which is why it runs multiple search strategies and checks identity rather than trusting the first result.
         </p>
         <p className="text-sm text-gray-400 italic">
           The diagram below shows real contacts and LinkedIn URLs found by a live run.
@@ -293,7 +293,7 @@ function RestaurantToMenuStrip() {
           A five-stage pipeline that takes a restaurant&apos;s name and menu URL and produces a finished,
           photo-illustrated menu. It extracts the text menu, scrapes customer photos from Google Maps, classifies
           the images, retouches each plate with an image model, then matches photos back to menu items. Takes 5–30
-          minutes per restaurant. Costs ~$0.30 + $0.04 per image retouched ($2.30 for a menu with 50 images).
+          minutes per restaurant. Costs ~$0.30 + $0.04 per image retouched ($2.30 for a menu with 50 images). The tricky step is matching: aligning scraped customer photos to the correct menu item when neither the photo nor the item is labeled.
         </p>
         <p className="text-sm text-gray-400 italic">
           Click any stage to see it in detail, or view the{" "}
@@ -369,13 +369,16 @@ export default function Workflows() {
     <section id="automations" className="pt-10 pb-10 border-t border-gray-100">
       <div className="px-8 mb-8">
         <h2 className="text-2xl font-semibold text-gray-900 mb-6">Automations I&apos;ve Built</h2>
+        <p className="text-base text-gray-500 leading-relaxed mb-6">
+          The same pipeline pattern — crawl, extract with cheap open models, structure, verify — runs underneath all of these, whether the input is SEC filings or restaurant menus.
+        </p>
         <h3 className="text-lg font-medium text-gray-900 mb-1">RIA Marketing Scraper</h3>
         <p className="text-base text-gray-500 leading-relaxed mb-3">
           Crawls and scrapes Registered Investment Advisor (RIA) websites to assemble a structured
           dataset of firm metadata, recent news, and key contacts including personal emails and bios,
           all sourced from live websites. Output is used to generate effective, personalized marketing
           campaigns. Built with Claude Code, uses self-hosted Firecrawl to crawl websites, and
-          OpenRouter for LLM inference. Inference costs &lt;$0.005 per firm and takes &lt;1 minute per firm.
+          OpenRouter for LLM inference. Inference costs &lt;$0.005 per firm and takes &lt;1 minute per firm. The low per-firm cost comes from self-hosting Firecrawl and routing inference to gpt-oss-120b via OpenRouter rather than frontier models.
         </p>
         <p className="text-sm text-gray-400 italic">
           The diagram below is a visualization of the workflow — each stage shows real data produced by a live run.

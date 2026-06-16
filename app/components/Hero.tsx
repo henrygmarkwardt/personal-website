@@ -25,7 +25,7 @@ export default function Hero() {
       {/* Two paragraphs side by side, full width */}
       <div className="flex gap-10">
         <p className="flex-1 text-base text-gray-600 leading-relaxed">
-          I graduated Kenyon College (Class of &apos;26) as an Economics major with minors in Statistics and French. I build AI automation systems and workflows that save time and money for real organizations.
+          I graduated Kenyon College (Class of &apos;26) as an Economics major with minors in Statistics and French. I build AI automation systems and workflows that save time and money for real organizations. I&apos;m currently looking for a full-time AI / automation engineering role starting fall 2026 — open to remote or relocation. The best way to see how I work is the systems below.
         </p>
         <p className="flex-1 text-base text-gray-600 leading-relaxed">
           Currently an AI Engineering Intern at{" "}
